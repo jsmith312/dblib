@@ -3,9 +3,9 @@ package dblib
 import (
 	"database/sql"
 
+	sc "github.com/jsmith312/soundcloud-api"
 	//go-sqlite3 sqlite library
 	_ "github.com/mattn/go-sqlite3"
-	"github.com/soundcloud-api/soundcloud/group"
 )
 
 //InitDB initializes the DB
@@ -38,7 +38,7 @@ func CreateTable(db *sql.DB) {
 }
 
 //StoreItem stores items into the DB
-func StoreItem(db *sql.DB, groups []group.Group) {
+func StoreItem(db *sql.DB, groups []sc.Group) {
 	sqlAdditem := `
 	INSERT OR REPLACE INTO items(
 		Id,
@@ -62,7 +62,7 @@ func StoreItem(db *sql.DB, groups []group.Group) {
 }
 
 //ReadItem reads the item table
-func ReadItem(db *sql.DB) []group.Group {
+func ReadItem(db *sql.DB) []sc.Group {
 	sqlReadall := `
 	SELECT Id, Name FROM items
 	ORDER BY datetime(InsertedDatetime) DESC
@@ -74,9 +74,9 @@ func ReadItem(db *sql.DB) []group.Group {
 	}
 	defer rows.Close()
 
-	var result []group.Group
+	var result []sc.Group
 	for rows.Next() {
-		group := group.Group{}
+		group := sc.Group{}
 		err2 := rows.Scan(&group.ID, &group.Name)
 		if err2 != nil {
 			panic(err2)
